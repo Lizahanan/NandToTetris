@@ -27,4 +27,3 @@ CHIP PC {
     //out
     Register(in=resetin , load=true , out=loadout, out=out ); 
     }
-

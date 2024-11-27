@@ -25,4 +25,4 @@ CHIP RAM4K {
     Mux8Way16(a=ram0, b=ram1, c=ram2, d=ram3, e=ram4, f=ram5, g=ram6, h=ram7, sel=address[9..11], out=out);
     
     
-}
+    }
