@@ -40,6 +40,22 @@ public class HackParser{
         return false; //no valid line to process was found in the while loop
     }
 
+    public void advance(){
+        currentInstruction = currentLine; //the current line is now storred as current instruction
+        //we move from previous instruction to new valid line
+    }
+
+    public InstructionType instructionType(){
+        if (currentInstruction.startsWith("@")){
+            return InstructionType.A_INSTRUCTION;
+
+        } else if (currentInstruction.startsWith("(")){
+            return InstructionType.L_INSTRUCTION;
+        } else {
+            return InstructionType
+        }
+
+    }
 
 
 }
