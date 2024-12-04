@@ -52,10 +52,23 @@ public class HackParser{
         } else if (currentInstruction.startsWith("(")){
             return InstructionType.L_INSTRUCTION;
         } else {
-            return InstructionType
+            return InstructionType.C_INSTRUCTION;
         }
 
     }
+    //returns current instruction
+    public String getCurrInstruction(){
+        return currentInstruction;
+    }
+
+    //closes the file 
+
+    public void close() throws IOException{
+        if (reader != null){
+            reader.close();
+        }
+    }
+
 
 
 }
