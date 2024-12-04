@@ -17,6 +17,7 @@ public class HackCode {
         destMap.put("AM", "101");
         destMap.put("AD", "110");
         destMap.put("ADM", "111");
+        destMap.put("MD", "011");
 
         //comp table 
         compMap.put("0", "0101010");

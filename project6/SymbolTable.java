@@ -16,7 +16,8 @@ public class SymbolTable {
         addEntry("LCL", 1);
         addEntry("ARG", 2);
         addEntry("THIS", 3);
-        addEntry("THAT", 4);
+        addEntry("THAT", 4);  
+
         
         //register R0 to R15 usiing for loop
         for (int i = 0; i<=15; i++){
