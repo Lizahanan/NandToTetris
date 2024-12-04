@@ -1,0 +1,45 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class HackParser{
+    private BufferedReader reader;
+    private String currentLine;
+    private String currentInstruction;
+
+    //instruction types 
+    public enum InstructionType {
+        A_INSTRUCTION, //@value
+        C_INSTRUCTION, // dest = comp;jump
+        L_INSTRUCTION  //(label)
+    }
+
+
+    //initializer: creates a parser and opens the source file
+    public HackParser(String filePath) throws IOException{
+        reader = new BufferedReader(new FileReader(filePath));
+        currentLine = null;
+        currentInstruction = null;
+    }
+
+    //checks if there's more work to do
+    public boolean hasMoreLines() throws IOException {
+        while ((currentLine = reader.readLine()) != null){
+            //trim whitespace and ignore empty lines 
+            currentLine = currentLine.trim();
+            //we read only the part with no comment
+            if (!currentLine.isEmpty() && !currentLine.startsWith("//")){
+                //remove inline comment
+                int commentInd = currentLine.indexOf("//");
+                if (commentInd != -1){
+                    currentLine = currentLine.substring(0, commentInd).trim();
+                }
+                return true; //theres a valid line to process
+            }
+        }
+        return false; //no valid line to process was found in the while loop
+    }
+
+
+
+}
