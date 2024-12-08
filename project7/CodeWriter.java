@@ -130,38 +130,37 @@ public class CodeWriter{
         writer.write("@SP\n");
         writer.write("AM=M-1\n"); // Decrement the stack pointer and point to the top
         writer.write("D=M\n"); // D = *SP
+       
         
     }
 
     // Loads the address of a segment[index] into A
-    private void loadSegmentAddress(String segment) throws IOException {
-        switch (segment) {
-            case "local":
-                writer.write("@LCL\n");
-                break;
-            case "argument":
-                writer.write("@ARG\n");
-                break;
-            case "this":
-                writer.write("@THIS\n");
-                break;
-            case "that":
-                writer.write("@THAT\n");
-                break;
-            case "pointer":
-                writer.write("@3\n");
-                break;
-            case "temp":
-                writer.write("@5\n");
-                break;
-            case "static":
-                writer.write("@16\n");
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid segment: " + segment);
-        }
-
-        
+    private void loadSegmentAddress(String segment, int index) throws IOException {
+        HashMap<String, String> segmentBase = new HashMap<>();
+        segmentBase.put("local", "LCL");
+        segmentBase.put("argument", "ARG");
+        segmentBase.put("this", "THIS");
+        segmentBase.put("that", "THAT");
+        if(segmentBase.containsKey(segment)){
+            writer.write("@" + segmentBase.get(segment) + "\n"); // Load the base address
+            writer.write("D=M\n"); // D = base address
+            writer.write("@" + index + "\n"); // Load the index
+            writer.write("A=D+A\n"); // A = base address + index
+        } else if (segment.equals("temp")){
+            writer.write("@R5\n"); //temp starts at R5
+            writer.write("D=A\n"); // D = 5
+            writer.write("@" + index + "\n"); // Load the index
+            writer.write("A=D+A\n"); // A = 5 + index
+        } else if (segment.equals("pointer")){
+            writer.write("@" + (index == 0 ? "THIS" : "THAT") + "\n"); // THIS or THAT
+        } else if (segment.equals("static")){
+            writer.write("@R16\n"); // Static variables start at R16
+            writer.write("D=A\n"); // D = 16
+            writer.write("@" + index + "\n"); // Load the index
+            writer.write("A=D+A\n"); // A = 16 + index
+        } else {
+            throw new IllegalArgumentException("Invalid segment: " + segment);
+        }    
     }
 
 }
