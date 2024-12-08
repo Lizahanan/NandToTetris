@@ -82,32 +82,85 @@ public class CodeWriter{
     }
 
     //helper methods 
-    // writeBinaryOp: Writes the assembly code for binary operations
+    // writeBinaryOp: Writes the assembly code for binary operations (+, -, &, |)
     private void writeBinaryOp(String operation) throws IOException {
-       
+        popStackToD();
+        writer.write("A=A-1\n"); // Decrement the stack pointer
+        writer.write("M=M" + operation + "D\n"); // M = M operation D
     }
     // Writes a unary operation (-, !)
     private void writeUnaryOp(String operation) throws IOException {
-        
+        writer.write("@SP\n");
+        writer.write("A=M-1\n"); //point to the top of the stack
+        writer.write("M=" + operation + "M\n"); // M = operation M
     }
 
     // Writes a comparison (eq, gt, lt)
     private void writeComparison(String jumpCommand) throws IOException {
-        
+        popStackToD();
+        writer.write("A=A-1\n"); // Decrement the stack pointer
+        writer.write("D=M-D\n"); // D = M - D
+        writer.write("@TRUE" + labelCounter + "\n");
+        writer.write("D;" + jumpCommand + "\n"); // Jump if condition is true
+        writer.write("@SP\n");
+        writer.write("A=M-1\n"); // Point to the top of the stack
+        writer.write("M=0\n"); // M = false
+        writer.write("@CONTINUE" + labelCounter + "\n");
+        writer.write("0;JMP\n");
+        writer.write("(TRUE" + labelCounter + ")\n");
+        writer.write("@SP\n");
+        writer.write("A=M-1\n"); // Point to the top of the stack
+        writer.write("M=-1\n"); // M = true
+        writer.write("(CONTINUE" + labelCounter + ")\n");
+        labelCounter++;
     }
 
     // Pushes the value in D onto the stack
     private void pushDToStack() throws IOException {
+        writer.write("@SP\n");
+        writer.write("A=M\n"); // Point to the stack pointer
+        writer.write("M=D\n"); // *SP = D
+        writer.write("@SP\n");
+        writer.write("M=M+1\n"); // Increment the stack pointer
         
     }
 
     // Pops the top value of the stack into D
     private void popStackToD() throws IOException {
+        writer.write("@SP\n");
+        writer.write("AM=M-1\n"); // Decrement the stack pointer and point to the top
+        writer.write("D=M\n"); // D = *SP
         
     }
 
     // Loads the address of a segment[index] into A
-    private void loadSegmentAddress(String segment, int index) throws IOException {
+    private void loadSegmentAddress(String segment) throws IOException {
+        switch (segment) {
+            case "local":
+                writer.write("@LCL\n");
+                break;
+            case "argument":
+                writer.write("@ARG\n");
+                break;
+            case "this":
+                writer.write("@THIS\n");
+                break;
+            case "that":
+                writer.write("@THAT\n");
+                break;
+            case "pointer":
+                writer.write("@3\n");
+                break;
+            case "temp":
+                writer.write("@5\n");
+                break;
+            case "static":
+                writer.write("@16\n");
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid segment: " + segment);
+        }
+
         
     }
 
