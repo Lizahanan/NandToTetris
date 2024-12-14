@@ -1,12 +1,12 @@
 import java.io.*;
 
-public class Assembler {
+public class Main {
 
     public static void main(String[] args){
         if (args.length != 1) {
             System.err.println("Usage: java HackAssembler <source file>");
             return;
-    }
+        }
         String inputFile = args[0];
         String outputFile = inputFile.replace(".asm", ".hack");
         try {
