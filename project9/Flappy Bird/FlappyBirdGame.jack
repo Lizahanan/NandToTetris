@@ -14,7 +14,6 @@ class FlappyBirdGame {
   field int gap_after_last;         // Amount of space following last created obstacle.
   field int leaps;                        // Number of leaps made in game.
   field int obstacleCount;                  // Number of obstacles created.
-  field int velocityFactor;                  // Controls the speed of falling and obstacles
   field int topScore;
 
 
@@ -30,7 +29,6 @@ class FlappyBirdGame {
     let gap_after_last = 0;
     let leaps = 1;
     let obstacleCount = 0;
-    let velocityFactor = 1;  // Start at normal speed
     let topScore = 0;
 
 
@@ -78,15 +76,7 @@ class FlappyBirdGame {
 
     while (isRunning) {
 
-        if (~(computeScore() < 10) & velocityFactor = 1) {
-            let velocityFactor = 2;
-        }
-        if (~(computeScore() < 50) & velocityFactor = 2) {
-            let velocityFactor = 3;
-        }
-        if (~(computeScore() < 100) & velocityFactor = 3) {
-            let velocityFactor = 4;
-        }
+       
 
       // Handle pause state
       let key = Keyboard.keyPressed();
@@ -251,10 +241,9 @@ class FlappyBirdGame {
 
   /*
   Update flier's rising/falling status.
-  */
-  method void updateFlierDropState() {
-    // Increase flier fall speed as velocityFactor increases
-    if (flier_drop_frame = (5 - velocityFactor)) {  // Faster fall with higher velocityFactor
+*/
+method void updateFlierDropState() {
+    if (flier_drop_frame = 5) {  // Flier descends after every 5 frames
         do flier.descend();
         let flier_drop_frame = 1;
     } else {
@@ -308,12 +297,13 @@ class FlappyBirdGame {
     while (i < num_obstacles) {
         let obstacle = obstacles[i];
         do obstacle.render();
-        do obstacle.moveLeft();  // Pipes already move based on their increment
-        let i = i + velocityFactor;  // Move faster as velocityFactor increases
+        do obstacle.moveLeft();
+        let i = i + 1; // Always increment by 1 to ensure all obstacles are processed
     }
 
     return;
-}
+  }
+
 
 
   /*
